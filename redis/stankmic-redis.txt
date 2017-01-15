@@ -1,0 +1,72 @@
+SELECT 47
+FLUSHDB
+
+SET visitor_stankmic "Michal Stanke,Praga"
+SADD set_visitors "stankmic"
+INCR counter_visitors
+HSET visitor_password "stankmic" "pass"
+
+SET visitor_jdoe "John Doe,Mexico City"
+SADD set_visitors "jdoe"
+INCR counter_visitors
+HSET visitor_password "jdoe" "heslo"
+
+SET visitor_aluska "Alice,Praha"
+SADD set_visitors "aluska"
+INCR counter_visitors
+HSET visitor_password "aluska" "12345"
+
+SET visitor_bobby "Bob,Mexico City"
+SADD set_visitors "bobby"
+INCR counter_visitors
+HSET visitor_password "bobby" "bobicek"
+
+SET visitor_mrbaggins "Bilbo Baggins,Hobbiton"
+SADD set_visitors "mrbaggins"
+INCR counter_visitors
+HSET visitor_password "mrbaggins" "theRING"
+
+GET visitor_stankmic
+SETRANGE visitor_stankmic 17 "h"
+GET visitor_stankmic
+
+DEL visitor_bobby
+SREM set_visitors "bobby"
+SADD set_rem_visitors "bobby"
+DECR counter_visitors
+HDEL visitor_password "bobby"
+
+SMEMBERS set_visitors
+SMEMBERS set_rem_visitors
+SUNION set_visitors set_rem_visitors
+
+HKEYS visitor_password
+HVALS visitor_password
+
+ZADD zset_parks 1968 "Legoland Billund Resort,Billund,Denmark,1968"
+ZADD zset_parks 1996 "Legoland Windsor Resort,Windsor,United Kingdom,1996"
+ZADD zset_parks 1999 "Legoland California,Carlsbad,United States,1999"
+ZADD zset_parks 2002 "Legoland Deutschland Resort,Guenzburg,Germany,2002"
+ZADD zset_parks 2911 "Legoland Florida Resort,Winter Haven,United States,2011"
+ZADD zset_parks 2012 "Legoland Malaysia Resort,Iskandar Puteri,Malaysia,2012"
+ZADD zset_parks 1971 "Walt Disney World Resort,Bay Lake,United States,1971"
+
+ZRANGE zset_parks 0 2 WITHSCORES
+ZREM zset_parks "Walt Disney World Resort,Bay Lake,United States,1971"
+ZRANGEBYSCORE zset_parks 2000 3000 WITHSCORES
+ZINCRBY zset_parks -900 "Legoland Florida Resort,Winter Haven,United States,2011"
+
+RPUSH history_stankmic "gate:ENTRANCE"
+RPUSH history_stankmic "attraction:Pirate boat"
+RPUSH history_stankmic "attraction:Lego cinema"
+RPUSH history_stankmic "attraction:Pharaon game"
+RPUSH history_stankmic "restaurant:Hot dog"
+RPUSH history_stankmic "gate:EXIT"
+
+LINSERT history_stankmic AFTER "restaurant:Hot dog" "restaurant:Hot dog|cancelled"
+LREM history_stankmic 0 "restaurant:Hot dog"
+LLEN history_stankmic
+LINDEX history_stankmic 4
+LINDEX history_stankmic 5
+
+
